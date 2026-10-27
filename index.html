@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Early Access | DecentBaby's Essence &amp; Expressions</title>
+<meta name="description" content="DecentBaby's Essence &amp; Expressions is opening soon. Get on the early access list and get in first.">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --burgundy:#800020; --burgundy-dark:#5e0018; --mauve:#d5afc9; --blush:#ebd4c4;
+    --cream:#fff9f2; --gray:#969292; --ink:#0e0e0e;
+    --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+    --sans:'DM Sans',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+    /* Emblem tuning: raise opacity for a bolder emblem, lower for fainter */
+    --emblem-opacity:.22;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--blush);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;
+       -webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+  a{color:var(--burgundy)}
+
+  .page{position:relative;isolation:isolate;overflow:hidden;min-height:100vh;
+        display:flex;flex-direction:column;align-items:center;padding:40px 20px 28px}
+
+  /* Large faded monogram, centred behind the whole form area */
+  .emblem{position:absolute;z-index:-1;left:50%;top:calc(50% + 70px);width:min(1100px,150vw);aspect-ratio:1/1;
+          transform:translate(-50%,-50%);opacity:var(--emblem-opacity);pointer-events:none;user-select:none}
+  .emblem img{display:block;width:100%;height:100%;object-fit:contain}
+
+  .banner-link{display:block;width:290px;max-width:78vw;margin:0 auto 34px;border-radius:2px}
+  .banner-link:focus-visible{outline:3px solid var(--burgundy);outline-offset:4px}
+  .banner{display:block;width:100%;height:auto;border-radius:2px}
+
+  /* Form panel: intentionally NO background so the emblem shows through */
+  .panel{width:100%;max-width:560px;background:transparent;text-align:center}
+  .kicker{font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--burgundy);margin-bottom:14px}
+  h1{font-family:var(--serif);font-weight:600;font-size:27px;line-height:1.15;letter-spacing:-.01em;color:var(--burgundy);margin-bottom:8px}
+  .sub{font-family:var(--serif);font-weight:600;font-size:18px;line-height:1.25;color:var(--burgundy);margin:0 0 20px}
+  .body{font-size:16.5px;color:var(--ink);margin-bottom:16px}
+  .perks{font-size:15px;color:var(--ink);margin-bottom:26px}
+  .perks strong{font-weight:600}
+
+  form{text-align:left}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .field{margin-bottom:14px}
+  label{display:block;font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--ink);margin-bottom:5px}
+  label .req{color:var(--burgundy)}
+  /* Inputs get a light translucent fill only so typed text stays legible over the emblem */
+  input[type=text],input[type=email],input[type=tel]{width:100%;height:48px;padding:10px 14px;font:inherit;font-size:16px;color:var(--ink);
+        background:rgba(255,249,242,.55);border:1px solid rgba(128,0,32,.45);border-radius:10px;-webkit-appearance:none;appearance:none}
+  input:focus{outline:2px solid var(--burgundy);outline-offset:1px;background:rgba(255,249,242,.85)}
+  .bday{display:flex;align-items:center;gap:10px}
+  .bday input{width:76px;text-align:center;padding:10px 8px}
+  .bday .slash{font-size:20px;color:var(--burgundy);font-weight:600;line-height:1}
+  .hint{font-size:12.5px;color:#5d5959;margin-top:5px}
+  .hp{position:absolute!important;left:-9999px;width:1px;height:1px;overflow:hidden}
+  .consent{font-size:12.5px;line-height:1.5;color:var(--ink);margin:6px 0 16px}
+  .btn{display:block;width:100%;border:0;cursor:pointer;background:var(--burgundy);color:var(--cream);font:inherit;font-weight:600;
+       font-size:16px;letter-spacing:.05em;padding:16px 20px;border-radius:999px;transition:background .2s,transform .2s}
+  .btn:hover{background:var(--burgundy-dark);transform:translateY(-1px)}
+  .btn:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+  .btn[disabled]{opacity:.65;cursor:progress;transform:none}
+  .msg{margin-top:12px;font-size:14px;text-align:center;min-height:1.2em}
+  .msg.err{color:#a00000;font-weight:600}
+  .done{display:none;text-align:center;padding:10px 0 4px}
+  .done h2{font-family:var(--serif);font-weight:600;font-size:34px;color:var(--burgundy);margin-bottom:8px}
+  .done p{font-size:16px}
+  .recaptcha-note{font-size:11px;color:#5d5959;margin-top:10px;text-align:center;line-height:1.4}
+  .recaptcha-note a{color:#5d5959}
+  .grecaptcha-badge{visibility:hidden}  /* allowed because the attribution text above is shown */
+
+  .below{margin-top:34px;text-align:center}
+  .tag{font-family:var(--serif);font-style:italic;font-weight:600;font-size:clamp(22px,4vw,27px);line-height:1.25;color:var(--burgundy);margin-bottom:12px}
+  .contact{font-size:14.5px;color:var(--ink)}
+  .contact a{color:var(--burgundy)}
+  .store{display:inline-block;margin-top:6px;font-size:14px;font-weight:500}
+  .privacy{display:inline-block;margin-top:8px;font-size:14px;font-weight:500}
+  footer{margin-top:34px;padding-top:6px;text-align:center;font-size:12px;color:var(--gray);line-height:1.5}
+  /* Grey #969292 on peach is low-contrast; it is the specified footer colour. Nudge darker if you want AA. */
+
+  @media (max-width:520px){
+    .page{padding:26px 18px 24px}
+    .banner-link{margin-bottom:26px}
+    .row{grid-template-columns:1fr;gap:0}
+    .emblem{top:calc(50% + 40px);width:190vw}
+    .body{font-size:16px}
+  }
+  @media (prefers-reduced-motion:reduce){.btn{transition:none}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="emblem" aria-hidden="true">
+    <picture><source srcset="assets/monogram.webp" type="image/webp"><img src="assets/monogram.png" alt="" width="1024" height="1024"></picture>
+  </div>
+
+  <a class="banner-link" href="https://essenceandexpressions4u.com"><img class="banner" src="assets/banner-logo.jpg" width="900" height="507" alt="DecentBaby's Essence &amp; Expressions"></a>
+
+  <main class="panel">
+    <p class="kicker">The early access list is open</p>
+    <h1>Your essence is yours to discover.</h1>
+    <p class="sub">Your Expressions Are Yours to Desire.</p>
+    <p class="body">DecentBaby’s Essence &amp; Expressions is a sexual wellness boutique built on one simple belief: the way you care for yourself shapes your confidence, and confidence changes everything.</p>
+    <p class="body">We’re here to redefine self-care, embrace pleasure, and create a space where everyone can explore their desires without shame or judgment.</p>
+    <p class="body"><strong>Opening Soon.</strong><br>Get on the list and get in first.</p>
+    <p class="perks"><strong>Early access list:</strong> Use code Save10 for 10% off orders of $75+ (first 100 subscribers, one use each) + 48-hour early access before we open to everyone. Plain packaging, private billing, zero awkwardness. 18+ only.</p>
+
+    <form id="signup" novalidate>
+      <div class="row">
+        <div class="field"><label for="fn">First name</label>
+          <input id="fn" name="first_name" type="text" autocomplete="given-name" maxlength="50"></div>
+        <div class="field"><label for="ln">Last name</label>
+          <input id="ln" name="last_name" type="text" autocomplete="family-name" maxlength="50"></div>
+      </div>
+      <div class="field"><label for="em">Email <span class="req" aria-hidden="true">*</span></label>
+        <input id="em" name="email_address" type="email" autocomplete="email" maxlength="80" required aria-required="true"></div>
+      <div class="field" role="group" aria-labelledby="bd-label"><label id="bd-label">Birthday (optional)</label>
+        <div class="bday">
+          <input id="bm" name="birthday_month" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="MM" maxlength="2" autocomplete="bday-month" aria-label="Birthday month, MM">
+          <span class="slash" aria-hidden="true">/</span>
+          <input id="bd" name="birthday_day" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="DD" maxlength="2" autocomplete="bday-day" aria-label="Birthday day, DD">
+        </div>
+        <p class="hint">Optional. We'd love to celebrate you.</p></div>
+      <div class="hp" aria-hidden="true"><label>Leave blank <input type="text" name="website" id="hp" tabindex="-1" autocomplete="off"></label></div>
+
+      <p class="consent">By submitting this form, you are consenting to receive marketing emails from DecentBaby's Essence &amp; Expressions. You can revoke your consent to receive emails at any time by using the Safe Unsubscribe® link, found at the bottom of every email.</p>
+      <button class="btn" id="submit" type="submit">Get early access</button>
+      <p class="msg" id="msg" role="status" aria-live="polite"></p>
+      <p class="recaptcha-note">This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Terms of Service</a> apply. Emails are serviced by Constant Contact.</p>
+    </form>
+
+    <div class="done" id="done" role="status" tabindex="-1">
+      <h2>You're on the list.</h2>
+      <p>Thank you for signing up! You can unsubscribe at any time using the Unsubscribe link at the bottom of every email.</p>
+    </div>
+
+    <div class="below">
+      <p class="tag">Let intimate Expression be the guide to your Essence.</p>
+      <p class="contact">Contact us: <a href="mailto:essenceandexpressions4u@gmail.com">essenceandexpressions4u@gmail.com</a></p>
+      <a class="store" href="https://essenceandexpressions4u.com">Visit our store</a><br>
+      <a class="privacy" href="https://checkout.shopify.com/76860686503/policies/42257186983.html?locale=en" target="_blank" rel="noopener">Privacy Policy</a>
+    </div>
+  </main>
+
+  <footer>DecentBaby's Essence &amp; Expressions | 522 W Riverside Avenue STE N, Spokane, WA 99201</footer>
+</div>
+
+<noscript><p style="text-align:center;padding:12px;background:#fff9f2">Please enable JavaScript to join the early access list, or email essenceandexpressions4u@gmail.com.</p></noscript>
+
+<script>
+/* ------------------------------------------------------------------
+   Constant Contact signup wiring (mirrors CC's own signup-form-widget.js)
+   POST https://visitor2.constantcontact.com/api/v1/signup_forms/{FORM_ID}
+   JSON: { group_id, contact:{email_address,first_name,last_name,birthday_month,birthday_day,list_memberships:[listId],source_name},
+           token:<invisible reCAPTCHA v2 token>, recaptcha_key, [rsci_vid] }
+   ------------------------------------------------------------------ */
+(function(){
+  var CC = {
+    formId:  "266039da-0a64-48be-ad66-97c3bf2cf4a7",
+    groupId: "b33a983cb8afc6c8e2f59e34833811ea",           // = _ctct_m
+    listIds: ["d87f3fcc-c3f8-11f1-a398-02420a320002"],      // internal CC list - fallback; refreshed from config below
+    recaptchaKey: "6LfHrSkUAAAAAPnKk5cT6JuKlKPzbwyTYuO8--Vr", // fallback; refreshed from config response header
+    config: "https://listgrowth.ctctcdn.com/v1/b33a983cb8afc6c8e2f59e34833811ea.json",
+    endpoint: "https://visitor2.constantcontact.com/api/v1/signup_forms/",
+    sourceName: "Inline Form"
+  };
+  var $ = function(id){return document.getElementById(id)};
+  var form=$("signup"), btn=$("submit"), msg=$("msg"), widgetId=null, tokenCb=null, grLoaded=false;
+
+  // Refresh list id + reCAPTCHA key from CC's public config (same call CC's widget makes)
+  fetch(CC.config,{cache:"no-store"}).then(function(r){
+    var k=r.headers.get("recaptcha-key"); if(k) CC.recaptchaKey=k;
+    return r.json();
+  }).then(function(j){
+    var f=(j.forms||[]).filter(function(x){return x.form_id===CC.formId})[0];
+    if(f&&f.list_ids&&f.list_ids.length) CC.listIds=f.list_ids;
+    window.__ccFields=f&&f.contact_fields||[];
+  }).catch(function(){}).then(loadRecaptcha);
+
+  function loadRecaptcha(){
+    if(grLoaded) return; grLoaded=true;
+    window.ccRecaptchaReady=function(){
+      widgetId=grecaptcha.render(document.body.appendChild(Object.assign(document.createElement("div"),{id:"ccrc"})),{
+        sitekey:CC.recaptchaKey,size:"invisible",
+        callback:function(t){ if(tokenCb) tokenCb(t) },
+        "error-callback":function(){ if(btn.disabled) fail("Verification failed. Please try again.") },
+        "expired-callback":function(){}
+      });
+    };
+    var s=document.createElement("script");
+    s.src="https://www.google.com/recaptcha/api.js?onload=ccRecaptchaReady&render=explicit"; s.async=true; s.defer=true;
+    document.head.appendChild(s);
+  }
+
+  function fail(t){ msg.className="msg err"; msg.textContent=t; btn.disabled=false; }
+  function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) }
+
+  // Optional birthday: both parts or neither; MM 1-12, DD 1-31 (and valid for that month)
+  var MAXD=[31,29,31,30,31,30,31,31,30,31,30,31];
+  function birthday(){
+    var m=$("bm").value.trim(), d=$("bd").value.trim();
+    if(!m&&!d) return {ok:true};
+    if(!/^\d{1,2}$/.test(m)||!/^\d{1,2}$/.test(d)) return {ok:false,err:"Please enter your birthday as month and day, or leave it blank."};
+    var mi=+m, di=+d;
+    if(mi<1||mi>12) return {ok:false,err:"Birthday month must be between 1 and 12.",el:"bm"};
+    if(di<1||di>31||di>MAXD[mi-1]) return {ok:false,err:"Please enter a valid birthday day (1-31).",el:"bd"};
+    return {ok:true,m:m,d:d};
+  }
+
+  function post(token,withOpt){
+    var c={ email_address:$("em").value.trim(), first_name:$("fn").value.trim(),
+            list_memberships:CC.listIds, source_name:CC.sourceName };
+    var ln=$("ln").value.trim(); if(withOpt&&ln) c.last_name=ln;
+    var b=birthday(); if(withOpt&&b.ok&&b.m){ c.birthday_month=b.m; c.birthday_day=b.d; }
+    var body={ group_id:CC.groupId, contact:c, token:token, recaptcha_key:CC.recaptchaKey, is_test:false };
+    try{ var v=localStorage.getItem("rsci_vid"); if(v) body.rsci_vid=v }catch(e){}
+    return fetch(CC.endpoint+CC.formId,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  }
+
+  function run(withOpt){
+    tokenCb=function(token){
+      post(token,withOpt).then(function(r){
+        if(r.ok){ form.style.display="none"; var d=$("done"); d.style.display="block"; d.focus(); return; }
+        return r.json().catch(function(){return[]}).then(function(errs){
+          errs=Array.isArray(errs)?errs:[];
+          var emailBad=errs.some(function(e){return /email/i.test(e.error_field||"")});
+          if(emailBad) return fail("Please enter a valid email address.");
+          // If the API rejects the optional fields (last name / birthday), retry once without them
+          var hasOpt=$("ln").value.trim()||$("bm").value.trim()||$("bd").value.trim();
+          if(withOpt && hasOpt && r.status>=400 && r.status<500){ grecaptcha.reset(widgetId); return run(false); }
+          fail("Sorry, we couldn't sign you up just now. Please try again or email essenceandexpressions4u@gmail.com.");
+        });
+      }).catch(function(){ fail("Network error. Please check your connection and try again.") });
+    };
+    grecaptcha.reset(widgetId); grecaptcha.execute(widgetId);
+  }
+
+  form.addEventListener("submit",function(e){
+    e.preventDefault();
+    msg.className="msg"; msg.textContent="";
+    if($("hp").value) return;                       // honeypot
+    if(!validEmail($("em").value.trim())){ $("em").focus(); return fail("Please enter a valid email address."); }
+    var bd=birthday(); if(!bd.ok){ $(bd.el||"bm").focus(); return fail(bd.err); }
+    if(widgetId===null||!window.grecaptcha){ return fail("Still loading. Please try again in a moment."); }
+    btn.disabled=true; msg.textContent="Adding you to the list…";
+    run(true);
+  });
+})();
+</script>
+</body>
+</html>
