@@ -172,9 +172,6 @@
     endpoint: "https://visitor2.constantcontact.com/api/v1/signup_forms/",
     sourceName: "Inline Form"
   };
-  // Refer & Win: personal links look like /join/?ref=april . Tag the signup with the referrer.
-  try{ var rf=(new URLSearchParams(location.search).get("ref")||"").replace(/[^a-z0-9_-]/gi,"").slice(0,30);
-       if(rf) CC.sourceName="Referral - "+rf; }catch(e){}
   var $ = function(id){return document.getElementById(id)};
   var form=$("signup"), btn=$("submit"), msg=$("msg"), widgetId=null, tokenCb=null, grLoaded=false;
 
